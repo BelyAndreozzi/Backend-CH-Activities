@@ -43,18 +43,17 @@ io.on('connection', async(socket)=>{
     })
 
     //mensajería 
-    socket.emit("messagesChat", mensajes);
+    socket.emit("allMessages", await mensajes.getMessages());
     
     //recibimos el mensaje
     socket.on("newMsgs", async(data)=>{
-        const newMessages = await mensajes.newMsg(data, mensajes.getMessages);
+        await mensajes.newMsg(data, mensajes.getMessages);
 
-        socket.emit('allMessages', newMessages)
+        socket.emit('allMessages', await mensajes.getMessages())
         
-        io.sockets.emit("allMessages", await mensajes.newMsg(data, mensajes.getMessages))
+        io.sockets.emit("allMessages", await mensajes.getMessages())
     })
 })
-
 
 
 app.get('/', (req, res)=>{

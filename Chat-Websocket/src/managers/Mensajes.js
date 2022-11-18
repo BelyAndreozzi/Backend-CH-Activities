@@ -21,8 +21,9 @@ class Mensajes {
         const newMessage = {
             email: data.email,
             date: data.date,
-            message: data.message
+            msg: data.msg
         }
+        console.log(newMessage);
         allMessages.push(newMessage);
         try{
             fs.promises.writeFile("./messages.txt",JSON.stringify(allMessages));

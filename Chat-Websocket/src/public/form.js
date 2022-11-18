@@ -1,5 +1,3 @@
-console.log('Funciono uwu');
-
 const socketClient = io()
 
 const productForm = document.getElementById('productForm')
@@ -15,7 +13,7 @@ productForm.addEventListener('submit', (event)=>{
 })
 
 const productsContainer = document.getElementById('productsContainer')
-const chatContainer = document.getElementById('chatContainer')
+
 socketClient.on('allProducts', async(data)=>{
     //productos
     const templateTable = await fetch('./templates/table.handlebars')
@@ -24,15 +22,8 @@ socketClient.on('allProducts', async(data)=>{
     const template = Handlebars.compile(templateFormat)
 
     const html = template({products:data})
-
+    
     productsContainer.innerHTML = html
-
-    //mensajería 
-    let messages=''
-    data.forEach(element => {
-        messages += `<p>Autor: ${element.author} - message: ${element.text}</p>`
-    });
-    chatContainer.innerHTML = messages
 })
 
 let email = ''
@@ -50,18 +41,18 @@ Swal.fire({
 const chatForm = document.getElementById('chatForm')
 
 chatForm.addEventListener("submit",(event)=>{
-    //prevenir que se recarge la pagina cuando se envia el formulario
     event.preventDefault();
-    console.log("formulario enviado")
+    
     const hora = getDate()
     const mensajes = {
-        email:document.getElementById('email').value,
+        email:email,
         date:hora,
         msg:document.getElementById("messageChat").value
     }
-    //envia nuevo mensaje
+    document.getElementById("messageChat").value = ''
+    
+    
     socketClient.emit("newMsgs", mensajes)
-    document.getElementById('messageChat').value = ''
 })
 
 const getDate = () => {
@@ -71,14 +62,16 @@ const getDate = () => {
     return dateFormated;
 }
 
-socketClient.on("allMessages",async(data)=>{
+const chatContainer = document.getElementById('chatContainer')
+socketClient.on("allMessages", async(data)=>{
+
     const templateMessage = await fetch("./templates/chat.handlebars");
     const templateFormat = await templateMessage.text();
 
-    const template = Handlebars.compile(templateFormat);
-
-    const html = template({mensajes: data});
-
+    const template = Handlebars.compile(templateFormat)
     
+    const html = template({mensajes:data});
+    
+
     chatContainer.innerHTML = html;
 });
