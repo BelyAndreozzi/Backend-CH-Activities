@@ -1,3 +1,11 @@
 Motores-de-plantillas/EJS/node_modules
 Motores-de-plantillas/Pug/node_modules
 Motores-de-plantillas/Handlebars/node_modules
+Chat-Websocket/node_modules
+Base-de-datos/node_modules
+Mocks-normalizacion/node_modules
+Formulario-Log-in/node_modules
+Log-in-Auth/node_modules
+Object-process/node_modules
+Balance-de-carga-y-nginx/Sv-Balance-de-carga/node_modules
+Loggers-gzip-performance/Sv-Balance-de-carga/node_modules
