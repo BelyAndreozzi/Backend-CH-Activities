@@ -18,6 +18,7 @@ import { fork } from 'child_process'
 import cluster from 'cluster'
 import os from 'os'
 import compression from 'compression'
+import { logger } from './logger/logger.js'
 
 //minimist
 const optionsM = { default: { p: 8080, m: 'fork' }, alias: { p: "port", m: "modo" } }
@@ -47,8 +48,8 @@ mongoose.connect(envConfig.BASE_DE_DATOS, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }, (error) => {
-    if (error) console.log("Conexión fallida");
-    console.log("Base de datos conectada");
+    if (error) logger.error("Conexión fallida");
+    logger.info("Base de datos conectada");
 })
 
 
@@ -67,23 +68,23 @@ app.use(session({
 //Cluster 
 if (MODO === 'cluster' && cluster.isPrimary) {
     const numCpus = os.cpus().length
-    console.log(numCpus);
+    logger.info(numCpus);
     for (let i = 0; i < numCpus; i++) {
         cluster.fork()
     }
     cluster.on('exit',(worker)=>{
-        console.log(`El proceso ${worker.process.pid} dejó de funcionar`);
+        logger.error(`El proceso ${worker.process.pid} dejó de funcionar`);
         cluster.fork()
     })
 } else {
     //express
-    const server = app.listen(PORT, () => console.log(`Server listening on port ${PORT} on process ${process.pid}`))
+    const server = app.listen(PORT, () => logger.info(`Server listening on port ${PORT} on process ${process.pid}`))
 
     //websocket
     const io = new Server(server)
 
     io.on('connection', async (socket) => {
-        console.log('Nuevo cliente conectado');
+        logger.info('Nuevo cliente conectado');
 
         //productos
         socket.emit('allProducts', await productos.getAll())
@@ -186,7 +187,7 @@ app.post('/signup', passport.authenticate("signupStrategy", {
     failureMessage: true,
 
 }), (req, res) => {
-    console.log(req.session.passport.username)
+    logger.info(req.session.passport.username)
     res.redirect("/")
 })
 
