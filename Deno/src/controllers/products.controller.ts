@@ -60,7 +60,6 @@ export const updateProductById = async (ctx: Context) => {
             { _id: new ObjectId(id) },
             { $set: { name, price, thumbnail } },
         );
-        console.log(updatedProduct)
 
         ctx.response.status = 201
         ctx.response.body = { status: 'success', data: updatedProduct, message: 'Producto actualizado correctamente' }
